@@ -24,7 +24,7 @@ class QuestionDetailListAdapter (context: Context, private val mQustion: Questio
     }
 
     override fun getCount(): Int {
-        return 1+mQustion.anwwers.size
+        return 1+mQustion.answers.size
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -79,7 +79,7 @@ class QuestionDetailListAdapter (context: Context, private val mQustion: Questio
 
             }
 
-            val answer = mQustion.anwwers[position-1]
+            val answer = mQustion.answers[position-1]
             val body = answer.body
             val name = answer.name
 
