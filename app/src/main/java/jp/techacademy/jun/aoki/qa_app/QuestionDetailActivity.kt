@@ -75,6 +75,10 @@ class QuestionDetailActivity : AppCompatActivity() {
                 startActivity(intent)
             }else{
                 //todo
+                val intent = Intent(applicationContext,AnswerSendActivity::class.java)
+                intent.putExtra("question",mQuestion)
+
+                startActivity(intent)
             }
         }
 
