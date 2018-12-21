@@ -75,7 +75,7 @@ class LoginActivity : AppCompatActivity() {
                             saveName(data!!["name"] as String)
                         }
 
-                        override fun onCancelled(p0: DatabaseError) {
+                        override fun onCancelled(firebaseError: DatabaseError) {
                            // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                         }
                     })

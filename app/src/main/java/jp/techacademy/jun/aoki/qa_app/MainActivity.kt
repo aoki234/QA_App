@@ -150,6 +150,12 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         mQuestionArrayList = ArrayList<Question>()
         mAdapter.notifyDataSetChanged()
 
+        mListView.setOnItemClickListener { parent, view, position, id ->
+            // Questionのインスタンスを渡して質問詳細画面を起動する
+            val intent = Intent(applicationContext, QuestionDetailActivity::class.java)
+            intent.putExtra("question", mQuestionArrayList[position])
+            startActivity(intent)
+        }
     }
 
     override fun onResume() {
@@ -199,6 +205,17 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
         } else if (id == R.id.nav_computer) {
             mToolbar.title = "コンピューター"
             mGenre = 4
+        }else if (id == R.id.nav_favorite) {
+
+            val user = FirebaseAuth.getInstance().currentUser
+            if (user == null) {
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(intent)
+            } else {
+                // お気に入り画面に遷移
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(intent)
+            }
         }
 
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
