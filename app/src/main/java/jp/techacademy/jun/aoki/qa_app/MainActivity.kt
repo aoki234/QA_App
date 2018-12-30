@@ -13,10 +13,10 @@ import android.support.v7.widget.Toolbar
 import android.util.Base64
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ListView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-
 
 
 class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelectedListener {
@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
 
         mDatabaseReference = FirebaseDatabase.getInstance().reference
 
-        mListView = findViewById(R.id.listView)
+        mListView = findViewById<ListView>(R.id.listView)
         mAdapter = QuestionListAdapter(this)
         mQuestionArrayList = ArrayList<Question>()
         mAdapter.notifyDataSetChanged()
@@ -170,6 +170,7 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
+        menu.removeItem(R.id.nav_favorite)
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
@@ -209,11 +210,10 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
 
             val user = FirebaseAuth.getInstance().currentUser
             if (user == null) {
-                val intent = Intent(applicationContext, LoginActivity::class.java)
-                startActivity(intent)
+                Snackbar.make(findViewById<View>(R.id.container),"ログインしてください",Snackbar.LENGTH_LONG).show()
             } else {
                 // お気に入り画面に遷移
-                val intent = Intent(applicationContext, LoginActivity::class.java)
+                val intent = Intent(applicationContext, FavoriteActivity::class.java)
                 startActivity(intent)
             }
         }

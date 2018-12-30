@@ -10,18 +10,15 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 
-class QuestionListAdapter(context: Context) :BaseAdapter(){
-
+class FavoriteListAdapter(context: Context) : BaseAdapter() {
     private var mLayoutInflater: LayoutInflater
     private var mQuestionArrayList = ArrayList<Question>()
 
     init {
         mLayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
     }
 
     override fun getCount(): Int {
-
         return mQuestionArrayList.size
     }
 
@@ -33,38 +30,34 @@ class QuestionListAdapter(context: Context) :BaseAdapter(){
         return position.toLong()
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var convertView = convertView
 
-        if(convertView == null){
-            convertView = mLayoutInflater.inflate(R.layout.list_questions,parent,false)
-
+        if (convertView == null) {
+            convertView = mLayoutInflater.inflate(R.layout.list_questions, parent, false)
         }
 
         val titleText = convertView!!.findViewById<View>(R.id.titleTextView) as TextView
         titleText.text = mQuestionArrayList[position].title
 
-        var nameText = convertView.findViewById<View>(R.id.nameTextView) as TextView
+        val nameText = convertView.findViewById<View>(R.id.nameTextView) as TextView
         nameText.text = mQuestionArrayList[position].name
-
-        //var favorite = convertView.findViewById<View>(R.id.) as TextView
-       // nameText.text = mQuestionArrayList[position].name
 
         val resText = convertView.findViewById<View>(R.id.resTextView) as TextView
         val resNum = mQuestionArrayList[position].answers.size
-
         resText.text = resNum.toString()
 
         val bytes = mQuestionArrayList[position].imageBytes
-        if(bytes.isNotEmpty()){
-            val image = BitmapFactory.decodeByteArray(bytes,0,bytes.size).copy(Bitmap.Config.ARGB_8888,true)
+        if (bytes.isNotEmpty()) {
+            val image = BitmapFactory.decodeByteArray(bytes, 0, bytes.size).copy(Bitmap.Config.ARGB_8888, true)
             val imageView = convertView.findViewById<View>(R.id.imageView) as ImageView
             imageView.setImageBitmap(image)
         }
+
         return convertView
     }
 
-    fun setQuestionArrayList(questionArrayList:ArrayList<Question>){
+    fun setQuestionArrayList(questionArrayList: ArrayList<Question>) {
         mQuestionArrayList = questionArrayList
     }
 }
