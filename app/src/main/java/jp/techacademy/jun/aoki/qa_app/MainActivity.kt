@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Base64
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -130,6 +131,24 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
                 val intent = Intent(applicationContext,QuestionSendActivity::class.java)
                 intent.putExtra("genre",mGenre)
                 startActivity(intent)
+
+                val dataBaseReference2 = FirebaseDatabase.getInstance().getReference("/favorite_latest")
+
+                dataBaseReference2.addListenerForSingleValueEvent(object: ValueEventListener{
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        Log.d("エラー","favorite id 取り出したよ")
+                        val data = snapshot.getValue() as String
+                        val mFavorite_id = data.toString()
+
+
+                    }
+                    override fun onCancelled(firebaseError: DatabaseError) {
+                        print("エラーが発生したみたい")
+                    }
+
+                })
+
             }
         }
 
