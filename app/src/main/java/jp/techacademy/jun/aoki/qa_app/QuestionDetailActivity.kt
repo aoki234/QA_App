@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_question_detail.*
 
+
+
 class QuestionDetailActivity : AppCompatActivity() {
 
     private lateinit var mQuestion :Question
@@ -18,14 +20,14 @@ class QuestionDetailActivity : AppCompatActivity() {
     private lateinit var mAnswerRef: DatabaseReference
 
     private lateinit var fav_btn:Button
-    private lateinit var fav_id:String
+    private var favorite:String? = null
 
     private lateinit var mDataBaseReference: DatabaseReference
 
    // private lateinit var fav_text:TextView
     private var fav_flag:Boolean = true
 
-    private val mFavoriteListener = object : ValueEventListener {
+    /*private val mFavoriteListener = object : ValueEventListener {
 
 
 
@@ -42,7 +44,7 @@ class QuestionDetailActivity : AppCompatActivity() {
         override fun onCancelled(firebaseError: DatabaseError) {
             print("エラーが発生")
         }
-    }
+    }*/
 
 
     private val mEventListener = object : ChildEventListener{
@@ -124,12 +126,32 @@ class QuestionDetailActivity : AppCompatActivity() {
                     val favRef = mDataBaseReference.child(ContentsPATH).child(mQuestion.genre.toString())
                     val userRef = mDataBaseReference.child(UsersPATH).child(user.uid)
 
-                    val fav_id = favRef.toString()
-                    Log.d("デバック",fav_id)
-                    favRef.addValueEventListener(mFavoriteListener)
+                    //val fav_id = favRef.toString()
+                    //Log.d("デバック",fav_id)
+                    favRef.addChildEventListener(object : ChildEventListener {
+                        override fun onChildAdded(dataSnapshot: DataSnapshot, prevChildKey: String?) {
+                            val favorite_id = dataSnapshot.key
+
+                            if(mQuestion.questionUid == favorite_id.toString()){
+                                favorite = favorite_id.toString()
+                                Log.d("デバック3",favorite)
+                            }
+
+                        }
+
+                        override fun onChildChanged(dataSnapshot: DataSnapshot, prevChildKey: String?) {}
+
+                        override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+
+                        override fun onChildMoved(dataSnapshot: DataSnapshot, prevChildKey: String?) {}
+
+                        override fun onCancelled(databaseError: DatabaseError) {}
+                    })
 
                     val data = HashMap<String, String>()
-                    data["favorite"] = fav_id
+                    data["favorite"] = favorite.toString()
+
+                    Log.d("デバック3","before data set")
                     userRef.setValue(data)
                     //Snackbar.make(v, "表示名を変更しました", Snackbar.LENGTH_LONG).show()
 
