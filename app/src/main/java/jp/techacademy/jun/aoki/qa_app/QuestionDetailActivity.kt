@@ -22,9 +22,8 @@ class QuestionDetailActivity : AppCompatActivity() {
     private lateinit var fav_btn:Button
     private var favorite:String? = null
 
-    private lateinit var mDataBaseReference: DatabaseReference
+    //private lateinit var mDataBaseReference: DatabaseReference
 
-   // private lateinit var fav_text:TextView
     private var fav_flag:Boolean = true
 
     /*private val mFavoriteListener = object : ValueEventListener {
@@ -94,6 +93,33 @@ class QuestionDetailActivity : AppCompatActivity() {
 
         val user = FirebaseAuth.getInstance().currentUser
 
+        val mDataBaseReference = FirebaseDatabase.getInstance().reference
+
+        val favRef = mDataBaseReference.child(ContentsPATH).child(mQuestion.genre.toString())
+        //val userRef = mDataBaseReference.child(UsersPATH).child(user.uid)
+
+        //val fav_id = favRef.toString()
+        //Log.d("デバック",fav_id)
+        favRef.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, prevChildKey: String?) {
+                val favorite_id = dataSnapshot.key
+
+                if(mQuestion.questionUid == favorite_id.toString()){
+                    favorite = favorite_id.toString()
+                    Log.d("デバック3",favorite)
+                }
+
+            }
+
+            override fun onChildChanged(dataSnapshot: DataSnapshot, prevChildKey: String?) {}
+
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+
+            override fun onChildMoved(dataSnapshot: DataSnapshot, prevChildKey: String?) {}
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        })
+
         fav_btn = findViewById(R.id.favorite_button)
         if (user == null) {
             //ログインしていない場合、非表示
@@ -114,7 +140,7 @@ class QuestionDetailActivity : AppCompatActivity() {
                 fav_flag = false
 
 
-                mDataBaseReference = FirebaseDatabase.getInstance().reference
+               val mDataBaseReference = FirebaseDatabase.getInstance().reference
 
                 val user = FirebaseAuth.getInstance().currentUser
 
