@@ -22,7 +22,9 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_question_send.*
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -122,9 +124,9 @@ class QuestionSendActivity : AppCompatActivity(),View.OnClickListener,DatabaseRe
             val genreRef = dataBaseReference.child(ContentsPATH).child(mGenre.toString())
             val dataBaseReference2 = FirebaseDatabase.getInstance().getReference("favorite_latest")
 
-            Log.d("エラー","favorite id 取り出す")
+            //Log.d("エラー","favorite id 取り出す")
 
-            dataBaseReference2.addListenerForSingleValueEvent(object: ValueEventListener{
+            /*dataBaseReference2.addListenerForSingleValueEvent(object: ValueEventListener{
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     Log.d("エラー","favorite id 取り出した")
@@ -137,7 +139,7 @@ class QuestionSendActivity : AppCompatActivity(),View.OnClickListener,DatabaseRe
                     print("エラーが発生")
                 }
 
-            })
+            })*/
 
             val data = HashMap<String, String>()
            // val data2 = HashMap<String, String>()

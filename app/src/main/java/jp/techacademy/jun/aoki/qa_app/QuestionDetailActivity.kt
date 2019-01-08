@@ -22,28 +22,11 @@ class QuestionDetailActivity : AppCompatActivity() {
     private lateinit var fav_btn:Button
     private var favorite:String? = null
 
-    //private lateinit var mDataBaseReference: DatabaseReference
+    private lateinit var mDataBaseReference: DatabaseReference
 
     private var fav_flag:Boolean = true
 
-    /*private val mFavoriteListener = object : ValueEventListener {
 
-
-
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            val map = dataSnapshot.value as Map<String, String>
-
-            val favorirteUid = dataSnapshot.key ?: ""
-
-            Log.d("デバック2","called this ")
-
-            Log.d("デバック2",favorirteUid.toString())
-
-        }
-        override fun onCancelled(firebaseError: DatabaseError) {
-            print("エラーが発生")
-        }
-    }*/
 
 
     private val mEventListener = object : ChildEventListener{
@@ -91,6 +74,10 @@ class QuestionDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_question_detail)
 
+
+        val extras = intent.extras
+        mQuestion = extras.get("question") as Question
+
         val user = FirebaseAuth.getInstance().currentUser
 
         val mDataBaseReference = FirebaseDatabase.getInstance().reference
@@ -104,9 +91,11 @@ class QuestionDetailActivity : AppCompatActivity() {
             override fun onChildAdded(dataSnapshot: DataSnapshot, prevChildKey: String?) {
                 val favorite_id = dataSnapshot.key
 
+
                 if(mQuestion.questionUid == favorite_id.toString()){
                     favorite = favorite_id.toString()
                     Log.d("デバック3",favorite)
+                    fav_btn.text = "お気に入りを登録"
                 }
 
             }
@@ -114,6 +103,39 @@ class QuestionDetailActivity : AppCompatActivity() {
             override fun onChildChanged(dataSnapshot: DataSnapshot, prevChildKey: String?) {}
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
+
+            override fun onChildMoved(dataSnapshot: DataSnapshot, prevChildKey: String?) {}
+
+            override fun onCancelled(databaseError: DatabaseError) {}
+        })
+
+        val userRef = mDataBaseReference.child(UsersPATH).child(user!!.uid).child(FavoriteKEY)
+
+        userRef.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, prevChildKey: String?) {
+                val favorite_id = dataSnapshot.value
+                //Log.d("デバック10",favorite_id.toString())
+
+                if(mQuestion.questionUid == favorite_id.toString()){
+                    fav_flag = false
+                    Log.d("デバック8",favorite)
+                    fav_btn.text = "お気に入りを解除"
+                }
+
+            }
+
+            override fun onChildChanged(dataSnapshot: DataSnapshot, prevChildKey: String?) {}
+
+            override fun onChildRemoved(dataSnapshot: DataSnapshot) {
+                val favorite_id = dataSnapshot.value
+                Log.d("デバック５",favorite_id.toString())
+
+                if(mQuestion.questionUid == favorite_id.toString()){
+                    fav_flag = false
+                    Log.d("デバック6",favorite)
+                }
+
+            }
 
             override fun onChildMoved(dataSnapshot: DataSnapshot, prevChildKey: String?) {}
 
@@ -131,8 +153,13 @@ class QuestionDetailActivity : AppCompatActivity() {
         fav_btn.setOnClickListener { v ->
             if (fav_flag === false) {
                 fav_btn.text = "お気に入りに登録"
-                //fav_text.text = "お気に入り済"
+
                 fav_flag = true
+                Snackbar.make(v, "お気に入りを解除しました", Snackbar.LENGTH_LONG).show()
+
+                val userRef = mDataBaseReference.child(UsersPATH).child(user!!.uid).child(FavoriteKEY).child(mQuestion.questionUid).removeValue()
+
+
 
             } else {
                 fav_btn.text = "お気に入りを解除"
@@ -149,45 +176,29 @@ class QuestionDetailActivity : AppCompatActivity() {
 
                 } else {
 
-                    val favRef = mDataBaseReference.child(ContentsPATH).child(mQuestion.genre.toString())
-                    val userRef = mDataBaseReference.child(UsersPATH).child(user.uid)
+                    //val favRef = mDataBaseReference.child(ContentsPATH).child(mQuestion.genre.toString())
+                    val userRef = mDataBaseReference.child(UsersPATH).child(user.uid).child(FavoriteKEY).child(favorite.toString())
 
-                    //val fav_id = favRef.toString()
-                    //Log.d("デバック",fav_id)
-                    favRef.addChildEventListener(object : ChildEventListener {
-                        override fun onChildAdded(dataSnapshot: DataSnapshot, prevChildKey: String?) {
-                            val favorite_id = dataSnapshot.key
 
-                            if(mQuestion.questionUid == favorite_id.toString()){
-                                favorite = favorite_id.toString()
-                                Log.d("デバック3",favorite)
-                            }
-
-                        }
-
-                        override fun onChildChanged(dataSnapshot: DataSnapshot, prevChildKey: String?) {}
-
-                        override fun onChildRemoved(dataSnapshot: DataSnapshot) {}
-
-                        override fun onChildMoved(dataSnapshot: DataSnapshot, prevChildKey: String?) {}
-
-                        override fun onCancelled(databaseError: DatabaseError) {}
-                    })
-
-                    val data = HashMap<String, String>()
-                    data["favorite"] = favorite.toString()
+                    val data = HashMap<String,String>()
+                    data["title"] = mQuestion.title
+                    data["body"] = mQuestion.body
+                    data["name"] = mQuestion.name
+                    //data["image"] = mQuestion.bytes
+                    //data["image"] = mQuestion.imageBytes
+                    //data[favorite.toString()] = favorite.toString()
 
                     Log.d("デバック3","before data set")
                     userRef.setValue(data)
-                    //Snackbar.make(v, "表示名を変更しました", Snackbar.LENGTH_LONG).show()
+                    Snackbar.make(v, "お気に入りに登録しました", Snackbar.LENGTH_LONG).show()
 
                 }
             }
         }
 
 
-                val extras = intent.extras
-                mQuestion = extras.get("question") as Question
+                //val extras = intent.extras
+                //mQuestion = extras.get("question") as Question
 
                 title = mQuestion.title
 
