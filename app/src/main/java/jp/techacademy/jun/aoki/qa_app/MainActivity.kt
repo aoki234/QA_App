@@ -153,9 +153,18 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
 
         mListView.setOnItemClickListener { parent, view, position, id ->
             // Questionのインスタンスを渡して質問詳細画面を起動する
-            val intent = Intent(applicationContext, QuestionDetailActivity::class.java)
-            intent.putExtra("question", mQuestionArrayList[position])
-            startActivity(intent)
+
+            val user = FirebaseAuth.getInstance().currentUser
+
+            if (user == null) {
+                // ログインしていなければログイン画面に遷移させる
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(intent)
+            } else {
+                val intent = Intent(applicationContext, QuestionDetailActivity::class.java)
+                intent.putExtra("question", mQuestionArrayList[position])
+                startActivity(intent)
+            }
         }
     }
 
@@ -212,6 +221,10 @@ class MainActivity : AppCompatActivity(),NavigationView.OnNavigationItemSelected
             val user = FirebaseAuth.getInstance().currentUser
             if (user == null) {
                 Snackbar.make(findViewById<View>(R.id.container),"ログインしてください",Snackbar.LENGTH_LONG).show()
+
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(intent)
+                
             } else {
                 // お気に入り画面に遷移
                 val intent = Intent(applicationContext, FavoriteActivity::class.java)

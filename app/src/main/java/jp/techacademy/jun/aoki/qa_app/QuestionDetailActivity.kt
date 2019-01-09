@@ -118,7 +118,7 @@ class QuestionDetailActivity : AppCompatActivity() {
 
                 if(mQuestion.questionUid == favorite_id.toString()){
                     fav_flag = false
-                    Log.d("デバック8",favorite)
+                    Log.d("デバック8",favorite_id.toString())
                     fav_btn.text = "お気に入りを解除"
                 }
 
@@ -132,7 +132,7 @@ class QuestionDetailActivity : AppCompatActivity() {
 
                 if(mQuestion.questionUid == favorite_id.toString()){
                     fav_flag = false
-                    Log.d("デバック6",favorite)
+                    Log.d("デバック6",favorite_id.toString())
                 }
 
             }

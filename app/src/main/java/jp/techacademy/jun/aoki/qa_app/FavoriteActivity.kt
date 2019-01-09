@@ -138,6 +138,23 @@ class FavoriteActivity : AppCompatActivity() {
         mAdapter.setQuestionArrayList(mQuestionArrayList)
         mListView.adapter = mAdapter
 
+        mListView.setOnItemClickListener { parent, view, position, id ->
+            // Questionのインスタンスを渡して質問詳細画面を起動する
+
+            val user = FirebaseAuth.getInstance().currentUser
+
+                if (user == null) {
+                // ログインしていなければログイン画面に遷移させる
+                val intent = Intent(applicationContext, LoginActivity::class.java)
+                startActivity(intent)
+            } else {
+                val intent = Intent(applicationContext, QuestionDetailActivity::class.java)
+                intent.putExtra("question", mQuestionArrayList[position])
+                startActivity(intent)
+            }
+
+        }
+
         val user = FirebaseAuth.getInstance().currentUser
 
         //mGenreRef = mDatabaseReference.child(ContentsPATH).child(mGenre.toString())
