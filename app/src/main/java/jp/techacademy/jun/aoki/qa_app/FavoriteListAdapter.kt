@@ -3,6 +3,7 @@ package jp.techacademy.jun.aoki.qa_app
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +50,7 @@ class FavoriteListAdapter(context: Context) : BaseAdapter() {
 
         val bytes = mQuestionArrayList[position].imageBytes
         if (bytes.isNotEmpty()) {
+            Log.d("デバック１３",bytes.toString())
             val image = BitmapFactory.decodeByteArray(bytes, 0, bytes.size).copy(Bitmap.Config.ARGB_8888, true)
             val imageView = convertView.findViewById<View>(R.id.imageView) as ImageView
             imageView.setImageBitmap(image)

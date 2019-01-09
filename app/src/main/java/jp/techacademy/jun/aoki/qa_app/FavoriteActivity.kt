@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Base64
+import android.util.Log
 import android.widget.ListView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -32,6 +33,7 @@ class FavoriteActivity : AppCompatActivity() {
             val name = map["name"] ?: ""
             val uid = map["uid"] ?: ""
             val imageString = map["image"] ?: ""
+            Log.d("デバック12",imageString)
             val bytes =
                 if (imageString.isNotEmpty()) {
                     Base64.decode(imageString, Base64.DEFAULT)

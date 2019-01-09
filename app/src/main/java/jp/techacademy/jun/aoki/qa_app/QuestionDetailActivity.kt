@@ -4,13 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_question_detail.*
-
 
 
 class QuestionDetailActivity : AppCompatActivity() {
@@ -22,7 +22,7 @@ class QuestionDetailActivity : AppCompatActivity() {
     private lateinit var fav_btn:Button
     private var favorite:String? = null
 
-    private lateinit var mDataBaseReference: DatabaseReference
+    //private lateinit var mDataBaseReference: DatabaseReference
 
     private var fav_flag:Boolean = true
 
@@ -91,7 +91,7 @@ class QuestionDetailActivity : AppCompatActivity() {
             override fun onChildAdded(dataSnapshot: DataSnapshot, prevChildKey: String?) {
                 val favorite_id = dataSnapshot.key
 
-
+                Log.d("デバック11",favorite_id.toString())
                 if(mQuestion.questionUid == favorite_id.toString()){
                     favorite = favorite_id.toString()
                     Log.d("デバック3",favorite)
@@ -113,8 +113,8 @@ class QuestionDetailActivity : AppCompatActivity() {
 
         userRef.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, prevChildKey: String?) {
-                val favorite_id = dataSnapshot.value
-                //Log.d("デバック10",favorite_id.toString())
+                val favorite_id = dataSnapshot.key
+                Log.d("デバック10",favorite_id.toString())
 
                 if(mQuestion.questionUid == favorite_id.toString()){
                     fav_flag = false
@@ -127,7 +127,7 @@ class QuestionDetailActivity : AppCompatActivity() {
             override fun onChildChanged(dataSnapshot: DataSnapshot, prevChildKey: String?) {}
 
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-                val favorite_id = dataSnapshot.value
+                val favorite_id = dataSnapshot.key
                 Log.d("デバック５",favorite_id.toString())
 
                 if(mQuestion.questionUid == favorite_id.toString()){
@@ -184,9 +184,14 @@ class QuestionDetailActivity : AppCompatActivity() {
                     data["title"] = mQuestion.title
                     data["body"] = mQuestion.body
                     data["name"] = mQuestion.name
-                    //data["image"] = mQuestion.bytes
-                    //data["image"] = mQuestion.imageBytes
-                    //data[favorite.toString()] = favorite.toString()
+
+                    if (mQuestion.imageBytes != null) {
+                        val bitmapString = Base64.encodeToString(mQuestion.imageBytes, Base64.DEFAULT)
+
+                        data["image"] = bitmapString
+                        //data["image"] = mQuestion.imageBytes
+                    }
+
 
                     Log.d("デバック3","before data set")
                     userRef.setValue(data)

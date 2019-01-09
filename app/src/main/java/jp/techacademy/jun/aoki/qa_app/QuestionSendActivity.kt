@@ -18,7 +18,6 @@ import android.provider.MediaStore
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Base64
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.google.firebase.auth.FirebaseAuth
@@ -124,25 +123,9 @@ class QuestionSendActivity : AppCompatActivity(),View.OnClickListener,DatabaseRe
             val genreRef = dataBaseReference.child(ContentsPATH).child(mGenre.toString())
             val dataBaseReference2 = FirebaseDatabase.getInstance().getReference("favorite_latest")
 
-            //Log.d("エラー","favorite id 取り出す")
-
-            /*dataBaseReference2.addListenerForSingleValueEvent(object: ValueEventListener{
-
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    Log.d("エラー","favorite id 取り出した")
-                    val data = snapshot.getValue() as String
-                    mFavorite_id = data.toString()
-
-
-                }
-                override fun onCancelled(firebaseError: DatabaseError) {
-                    print("エラーが発生")
-                }
-
-            })*/
 
             val data = HashMap<String, String>()
-           // val data2 = HashMap<String, String>()
+
 
             // UID
             data["uid"] = FirebaseAuth.getInstance().currentUser!!.uid
@@ -167,15 +150,11 @@ class QuestionSendActivity : AppCompatActivity(),View.OnClickListener,DatabaseRe
             val sp = PreferenceManager.getDefaultSharedPreferences(this)
             val name = sp.getString(NameKEY, "")
 
-            Log.d("エラー","idを出力してみる")
-            //Log.d("エラー",mFavorite_id)
-            val favorite_int = mFavorite_id!!.toInt() + 1
-            Log.d("エラー",favorite_int.toString())
+
 
             data["title"] = title
             data["body"] = body
             data["name"] = name
-            data["favorite_id"] = favorite_int.toString()
 
             // 添付画像を取得する
             val drawable = imageView.drawable as? BitmapDrawable
